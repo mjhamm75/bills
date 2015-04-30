@@ -1,13 +1,18 @@
 import BILL from './../constants/bill.type.js';
+import BillsConstants from './../constants/bills.constants.js';
 import BillsDispatcher from './../dispatchers/bill.dispatcher.js';
+import billUtils from './../utils/bills.utils.js';
 var _ = require('lodash');
 var EventEmitter = require('events').EventEmitter;
+var CHANGE_EVENT = "change";
+
+
 var bills = [
 	{
 		id: 1,
 		name: 'Car Payment',
 		payment: 56,
-		paid: true,
+		paid: false,
 		total: 2200,
 		due_date: '2015-05-19T08:27:05-06:00',
 		type: BILL.LOAN
@@ -33,6 +38,14 @@ var bills = [
 	}
 ];
 
+function _toggleBill(bill) {
+	bills.forEach(b => {
+		if(b.id === bill.id) {
+			bill.paid = !bill.paid			
+		}
+	})
+}
+
 var BillStore = _.extend(EventEmitter.prototype, {
 	emitChange: function() {
 		this.emit(CHANGE_EVENT);
@@ -50,11 +63,20 @@ var BillStore = _.extend(EventEmitter.prototype, {
 		return bills;
 	},
 
+	getTotals: function() {
+		return {
+			owed: billUtils.getTotalOwed(bills),
+			paid: billUtils.getTotalPaid(bills)
+		}
+	},
+
 	dispatcherIndex: BillsDispatcher.register(payload => {
 		var action = payload.action;
 		switch(action.actionType) {
 			case BillsConstants.GET_BILLS:
 				break;
+			case BillsConstants.TOGGLE_BILL:
+				_toggleBill(action.bill);
 		}
 
 		BillStore.emitChange();

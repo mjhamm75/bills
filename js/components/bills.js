@@ -1,29 +1,39 @@
-import React from 'react';
 import _ from 'lodash';
-import moment from 'moment';
 import numeral from 'numeral';
+import moment from 'moment';
+import React from 'react';
+
+import BillActions from './../actions/bills.actions.js'
 import BillStore from './../stores/bill.store.js';
 
+
+function getBills() {
+	return BillStore.getBills();
+}
+
 module.exports = React.createClass({
+	componentWillMount: function() {
+		BillStore.addChangeListener(this._onChange);
+	},
+
+	_onChange: function() {
+		this.setState({bills: getBills()});
+	},
+
 	filterBills: function(criteria) {
 		var bills = this.state.bills;
 		var filtered = _.sortBy(bills, criteria)
 		this.setState({'bills': filtered});
 	},
+
 	getInitialState: function() {
 		return {
-			bills: BillStore.getBills()
+			bills: getBills()
 		}
 	},
 
 	render: function() {
 		var bills = this.state.bills;
-		var totalPayment = bills.reduce((a, b) => {
-			return {payment: a.payment + b.payment};
-		});
-		var totalPayoff = bills.reduce((a, b) => {
-			return {total: a.total + b.total};
-		});
 		var billsDom = bills.map((bill, index) => {
 			var billPaidDom = bill.paid ? <div className="glyphicon glyphicon-ok" aria-hidden="true" /> : <div></div>
 			return (
@@ -50,27 +60,13 @@ module.exports = React.createClass({
 					</tr>
 				</thead>
 				<tbody>
-					{billsDom}
-					<tr key={"total"}>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td>{numeral(totalPayment.payment).format('$0,0.00')}</td>
-						<td></td>
-					</tr>
-				</tbody>
-									
+					{billsDom}					
+				</tbody>			
 			</table>
 		)
 	},
 
 	toggleBill: function(bill) {
-		var bills = this.state.bills;
-		bills.forEach(b => {
-			if(b.id === bill.id) {
-				b.paid = !b.paid
-			}			
-		})
-		this.setState({'bills': bills});
+		BillActions.toggleBill(bill);
 	}
 });
