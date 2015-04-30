@@ -18,56 +18,49 @@ module.exports = React.createClass({
 
 	render: function() {
 		var bills = this.state.bills;
+		var totalPayment = bills.reduce((a, b) => {
+			return {payment: a.payment + b.payment};
+		});
+		var totalPayoff = bills.reduce((a, b) => {
+			return {total: a.total + b.total};
+		});
 		var billsDom = bills.map((bill, index) => {
-			var billPaidDom = bill.paid ? <span className="glyphicon glyphicon-ok" aria-hidden="true" /> : <span></span>
+			var billPaidDom = bill.paid ? <div className="glyphicon glyphicon-ok" aria-hidden="true" /> : <div></div>
 			return (
-				<li key={bill.id} className="spacer" onClick={this.toggleBill.bind(this, bill)}>
-					<span className="bill-paid">
+				<tr key={bill.id} className="spacer" onClick={this.toggleBill.bind(this, bill)}>
+					<td>
 						{billPaidDom}
-					</span>
-					<span className="bill-index">{index + 1 + "."}</span>
-					<span className="bill-name">{bill.name}</span>
-					<span className="bill-amount">{numeral(bill.payment).format('$0,0.00')}</span>
-					<span className="bill-due-date">{moment(bill.due_date).format('DD MMM, YYYY')}</span>
-				</li>
+					</td>
+					<td>{index + 1 + "."}</td>
+					<td>{bill.name}</td>
+					<td>{numeral(bill.payment).format('$0,0.00')}</td>
+					<td>{moment(bill.due_date).format('DD MMM, YYYY')}</td>
+				</tr>
 			)
 		})
 		return (
-			<ul className="list-unstyled">
-				{this.renderHeader()}
-				{billsDom}
-				{this.renderTotalOwed(bills)}
-			</ul>
-		)
-	},
-
-	renderHeader: function() {
-		return (
-			<li key={"header"} className="spacer total">
-				<span className="bill-paid"></span>
-				<span className="bill-index"></span>
-				<span className="bill-name" onClick={this.filterBills.bind(this, 'name')}>Name</span>
-				<span className="bill-amount" onClick={this.filterBills.bind(this, 'payment')}>Amount</span>
-				<span className="bill-due-date" onClick={this.filterBills.bind(this, 'due_date')}>Due</span>
-			</li>
-		)
-	},
-
-	renderTotalOwed: function(bills) {
-		var totalPayment = bills.reduce((a, b) => {
-			return {payment: a.payment + b.payment};
-		})
-		var totalPayoff = bills.reduce((a, b) => {
-			return {total: a.total + b.total};
-		})
-		return (
-			<li key={"total"} className="spacer total">
-				<span className="bill-paid"></span>
-				<span className="bill-index"></span>
-				<span className="bill-name"></span>
-				<span className="bill-amount">{numeral(totalPayment.payment).format('$0,0.00')}</span>
-				<span className="bill-due-date"></span>
-			</li>
+			<table className="table table-hover table-condensed bills-table">
+				<thead>
+					<tr key={"header"}>
+						<th></th>
+						<th></th>
+						<th onClick={this.filterBills.bind(this, 'name')}>Name</th>
+						<th onClick={this.filterBills.bind(this, 'payment')}>Amount</th>
+						<th onClick={this.filterBills.bind(this, 'due_date')}>Due</th>
+					</tr>
+				</thead>
+				<tbody>
+					{billsDom}
+					<tr key={"total"}>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>{numeral(totalPayment.payment).format('$0,0.00')}</td>
+						<td></td>
+					</tr>
+				</tbody>
+									
+			</table>
 		)
 	},
 
