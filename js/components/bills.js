@@ -5,6 +5,7 @@ import React from 'react';
 
 import BillActions from './../actions/bills.actions.js'
 import BillStore from './../stores/bill.store.js';
+import AddBill from './add.js';
 
 
 function getBills() {
@@ -49,20 +50,23 @@ module.exports = React.createClass({
 			)
 		})
 		return (
-			<table className="table table-hover table-condensed bills-table">
-				<thead>
-					<tr key={"header"}>
-						<th></th>
-						<th></th>
-						<th onClick={this.filterBills.bind(this, 'name')}>Name</th>
-						<th onClick={this.filterBills.bind(this, 'payment')}>Amount</th>
-						<th onClick={this.filterBills.bind(this, 'due_date')}>Due</th>
-					</tr>
-				</thead>
-				<tbody>
-					{billsDom}					
-				</tbody>			
-			</table>
+			<div>
+				<AddBill />
+				<table className="table table-hover table-condensed bills-table">
+					<thead>
+						<tr key={"header"}>
+							<th></th>
+							<th></th>
+							<th onClick={this.filterBills.bind(this, 'name')}>Name</th>
+							<th onClick={this.filterBills.bind(this, 'payment')}>Amount</th>
+							<th onClick={this.filterBills.bind(this, 'due_date')}>Due</th>
+						</tr>
+					</thead>
+					<tbody>
+						{billsDom}					
+					</tbody>			
+				</table>
+			</div>
 		)
 	},
 

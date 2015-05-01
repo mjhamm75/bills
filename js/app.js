@@ -10,12 +10,10 @@ var RouteHandler = Router.RouteHandler;
 
 var App = require('./components/main.js');
 var Bills = require('./components/bills.js');
-var Add = require('./components/add.js');
 
 var routes = (
   <Route name="app" path="/" handler={App}>
     <Route name="bills" handler={Bills}/>
-    <Route name="add" handler={Add}/>
   </Route>
 );
 

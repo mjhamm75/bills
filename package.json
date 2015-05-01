@@ -20,6 +20,7 @@
     "moment": "^2.10.2",
     "numeral": "^1.5.3",
     "react": "^0.13.1",
+    "react-bootstrap": "^0.21.1",
     "react-router": "^0.13.2"
   }
 }

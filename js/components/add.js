@@ -1,17 +1,47 @@
+var Button = require('react-bootstrap').Button;
+var Modal = require('react-bootstrap').Modal;
+var OverlayMixin = require('react-bootstrap').OverlayMixin;
 var React = require('react');
 
+import AddModal from './add.modal.js';
+
 module.exports = React.createClass({
-	handleClick: function() {
-		console.log('clicked');
+	mixins: [OverlayMixin],
+
+	getInitialState() {
+		return {
+			isModalOpen: false
+		};
 	},
+
+	handleToggle() {
+		this.setState({
+			isModalOpen: !this.state.isModalOpen
+		});
+	},
+
 	render: function() {
 		return (
-			<div>
-				<h2>Add Bills</h2>
-				<button onClick={this.handleClick}>Add</button>
-				<input />
-				<input />	
-			</div>
+			<Button bsStyle="primary" onClick={this.handleToggle}>
+				Add
+			</Button>
 		)
-	}
+	},
+
+	renderOverlay() {
+		if (!this.state.isModalOpen) {
+			return <span/>;
+		}
+
+		return (
+			<Modal bsStyle='primary' title='Add bill' animation={false} onRequestHide={this.handleToggle}>
+				<div className='modal-body'>
+					<AddModal close={this.handleToggle}/>
+				</div>
+				<div className='modal-footer'>
+					<Button onClick={this.handleToggle}>Close</Button>
+				</div>
+			</Modal>
+		);
+  }
 });

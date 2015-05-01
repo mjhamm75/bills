@@ -38,6 +38,20 @@ var bills = [
 	}
 ];
 
+function _nextId() {
+	var result = bills.reduce((a, b) => {
+		return {id: a.id > b.id ? a.id : b.id};
+	}, {id: 0})
+	return result.id + 1;
+}
+
+function _addBill(bill) {
+	bill.id = _nextId();
+	bill.paid = false;
+	bill.type = BILL.OTHER
+	bills.push(bill);
+}
+
 function _toggleBill(bill) {
 	bills.forEach(b => {
 		if(b.id === bill.id) {
@@ -77,6 +91,10 @@ var BillStore = _.extend(EventEmitter.prototype, {
 				break;
 			case BillsConstants.TOGGLE_BILL:
 				_toggleBill(action.bill);
+				break;
+			case BillsConstants.ADD_BILL:
+				_addBill(action.bill)
+				break;
 		}
 
 		BillStore.emitChange();
