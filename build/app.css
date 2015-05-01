@@ -1,0 +1,9 @@
+.spacer {
+  padding: 10px;
+}
+.total {
+  padding-top: 20px;
+}
+.bills-table td:first-child {
+  min-width: 25px;
+}
