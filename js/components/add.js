@@ -22,9 +22,11 @@ module.exports = React.createClass({
 
 	render: function() {
 		return (
-			<Button bsStyle="primary" onClick={this.handleToggle}>
-				Add
-			</Button>
+			<div>
+				<Button bsStyle="primary" onClick={this.handleToggle}>
+					Add
+				</Button>
+			</div>
 		)
 	},
 
